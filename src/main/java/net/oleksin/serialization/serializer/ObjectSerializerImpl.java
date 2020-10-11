@@ -11,11 +11,18 @@ public class ObjectSerializerImpl implements ObjectSerializer {
   
   @Override
   public void serialize(DataOutputStream out, Object obj) throws IOException {
-    out.write(obj.getClass().toString().getBytes());
+    out.writeUTF(obj.getClass().toString());
   }
   
   @Override
   public Object deserialize(DataInputStream in) throws IOException {
-    return in.read();
+    try {
+      Class cl = Class.forName(in.readUTF());
+      Object obj = cl.newInstance();
+      return obj;
+    } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }

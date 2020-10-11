@@ -4,23 +4,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NamesPool {
-  private final Map<String, Integer> typesMap;
+  private final Map<String, Integer> serializeTypesMap;
+  private final Map<Integer, String> deserializeTypesMap;
   private int typeId = 0;
   
   public NamesPool() {
-    this.typesMap = new HashMap<>();
+    this.serializeTypesMap = new HashMap<>();
+    this.deserializeTypesMap = new HashMap<>();
   }
   
-  public Integer getTypeFor(String name) {
-    return typesMap.getOrDefault(name, addNewName(name));
-  }
-  
-  private Integer addNewName(String name) {
-    typesMap.put(name, typeId);
+  public Integer getTypeForSerialize(String name) {
+    if (serializeTypesMap.containsKey(name)) {
+      return serializeTypesMap.get(name);
+    }
+    serializeTypesMap.put(name, typeId);
     return typeId++;
   }
   
-  public Map<String, Integer> getTypesMap() {
-    return typesMap;
+  public Map<String, Integer> getSerializeTypesMap() {
+    return serializeTypesMap;
+  }
+  
+  public String getClassForDeserialize(Integer integer) {
+    return deserializeTypesMap.get(integer);
+  }
+  
+  public String put(Integer integer, String name) {
+    return deserializeTypesMap.put(integer, name);
+  }
+  
+  public Map<Integer, String> getDeserializeTypesMap() {
+    return deserializeTypesMap;
   }
 }

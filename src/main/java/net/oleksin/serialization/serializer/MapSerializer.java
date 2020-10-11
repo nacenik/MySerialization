@@ -15,6 +15,7 @@ public class MapSerializer implements ObjectSerializer {
   public void serialize(DataOutputStream out, Object obj) throws IOException {
     Map map = (Map) obj;
     Set keySet = map.keySet();
+    out.writeUTF(map.getClass().toString());
     out.writeInt(map.size());
     for (int i = 0; i < map.size(); i++) {
       out.writeUTF(String.valueOf(keySet.toArray()[i]));
@@ -23,10 +24,14 @@ public class MapSerializer implements ObjectSerializer {
   }
   
   @Override
-  public Map deserialize(DataInputStream in) throws IOException {
-    Map map = new HashMap();
-    for (int i = 0; i < in.readInt(); i++) {
-      map.put(in.readUTF(), in.readUTF());
+  public Map deserialize(DataInputStream in) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    Class mapClass = Class.forName(in.readUTF());
+    Map map = (Map) mapClass.newInstance();
+    int size = in.readInt();
+    for (int i = 0; i < size; i++) {
+      Object keyObject = in.readInt();
+      Object valueObject = in.readInt();
+      map.put(keyObject, valueObject);
     }
     return map;
   }
