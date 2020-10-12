@@ -1,13 +1,12 @@
 package net.oleksin.serialization.serializer;
 
-import net.oleksin.serialization.ObjectSerializer;
+import net.oleksin.serialization.Serializer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 
-public class StringSerializer implements ObjectSerializer {
+public class StringSerializer implements Serializer {
   
   @Override
   public void serialize(DataOutputStream out, Object obj) throws IOException {
