@@ -1,12 +1,8 @@
 package net.oleksin.serialization;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
-public interface ObjectSerializer<T> {
+public interface Serializer {
   
-  void serialize(DataOutputStream out, T obj) throws IOException;
-  
-  T deserialize(DataInputStream in) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException;
+  void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException;
 }

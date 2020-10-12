@@ -1,21 +1,25 @@
 package net.oleksin.serialization.serializer;
 
-import net.oleksin.serialization.ObjectSerializer;
+import net.oleksin.serialization.Serializer;
+import net.oleksin.serialization.SerializingContext;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class IntegerSerializer implements ObjectSerializer {
+public class IntegerSerializer implements Serializer {
   
-  @Override
   public void serialize(DataOutputStream out, Object obj) throws IOException {
     Integer integer = (Integer) obj;
     out.writeInt(integer);
   }
   
-  @Override
   public Integer deserialize(DataInputStream in) throws IOException {
     return in.readInt();
+  }
+  
+  @Override
+  public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
+    serializingContext.writeInt((Integer) obj);
   }
 }

@@ -1,17 +1,16 @@
 package net.oleksin.serialization.serializer;
 
-import net.oleksin.serialization.ObjectSerializer;
+import net.oleksin.serialization.Serializer;
+import net.oleksin.serialization.SerializingContext;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class MapSerializer implements ObjectSerializer {
-  
-  @Override
+public class MapSerializer implements Serializer {
+
   public void serialize(DataOutputStream out, Object obj) throws IOException {
     Map map = (Map) obj;
     Set keySet = map.keySet();
@@ -23,7 +22,6 @@ public class MapSerializer implements ObjectSerializer {
     }
   }
   
-  @Override
   public Map deserialize(DataInputStream in) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
     Class mapClass = Class.forName(in.readUTF());
     Map map = (Map) mapClass.newInstance();
@@ -34,5 +32,17 @@ public class MapSerializer implements ObjectSerializer {
       map.put(keyObject, valueObject);
     }
     return map;
+  }
+  
+  @Override
+  public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
+    Map map = (Map) obj;
+    serializingContext.writeInt(map.size());
+    Set keySet = map.keySet();
+    for (Object key : keySet) {
+      serializingContext.writeObject(key);
+      serializingContext.writeObject(map.get(key));
+    }
+    
   }
 }

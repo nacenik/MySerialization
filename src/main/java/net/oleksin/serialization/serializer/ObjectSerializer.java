@@ -1,29 +1,37 @@
 package net.oleksin.serialization.serializer;
 
-import net.oleksin.serialization.ObjectSerializer;
+import net.oleksin.serialization.Serializer;
+import net.oleksin.serialization.SerializingContext;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ObjectSerializerImpl implements ObjectSerializer {
+public class ObjectSerializer implements Serializer {
+  private final Map<Class<?>, Field[]> fieldCache = new HashMap<>();
   
   @Override
-  public void serialize(DataOutputStream out, Object obj) throws IOException {
-    String str = obj.getClass().getName();
-    out.writeUTF(str);
+  public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
+    Class<?> klass = obj.getClass();
+    Field[] fields = getFields(klass);
+    for (Field field : fields) {
+      serializingContext.writeFiledName(field.getName());
+      Object fieldObj = field.get(obj);
+      serializingContext.writeObject(fieldObj);
+    }
+    
   }
   
-  @Override
-  public Object deserialize(DataInputStream in) throws IOException {
-    try {
-      Class cl = Class.forName(in.readUTF());
-      Object obj = cl.newInstance();
-      return obj;
-    } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-      e.printStackTrace();
+  private Field[] getFields(Class<?> klass) {
+    Field[] fields = fieldCache.get(klass);
+    if (fields == null) {
+      fields = klass.getDeclaredFields();
+      for (Field field : fields) {
+        field.setAccessible(true);
+      }
+      fieldCache.put(klass, fields);
     }
-    return null;
+    return fields;
   }
 }
