@@ -11,7 +11,8 @@ public class ObjectSerializerImpl implements ObjectSerializer {
   
   @Override
   public void serialize(DataOutputStream out, Object obj) throws IOException {
-    out.writeUTF(obj.getClass().toString());
+    String str = obj.getClass().getName();
+    out.writeUTF(str);
   }
   
   @Override

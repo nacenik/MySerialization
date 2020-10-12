@@ -3,8 +3,10 @@ package net.oleksin.serialization;
 import net.oleksin.serialization.serializer.*;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -24,6 +26,7 @@ public class MySerializationImpl implements MySerialization {
   private final String header = "NIKITOS";
   private final int objectNumberForSerialize = 0x200;
   private final int mapNumberForSerialize = 0x199;
+  private final int objectsArraySerializer = 0x198;
   private long offset = 0;
   private Map<Class<?>, Integer> typeMap;
   private NamesPool namesPool;
@@ -37,7 +40,11 @@ public class MySerializationImpl implements MySerialization {
     typeMap.put(Long.class, 0x03);
     typeMap.put(Float.class, 0x04);
     typeMap.put(Double.class, 0x05);
-    typeMap.put(String.class, 0x06);
+    typeMap.put(Character.class, 0x06);
+    typeMap.put(Boolean.class, 0x07);
+    typeMap.put(String.class, 0x08);
+    typeMap.put(LocalDateTime.class, 0x09);
+    typeMap.put(Arrays.class, objectsArraySerializer);
     typeMap.put(Map.class, mapNumberForSerialize);
     
     serializerMap = new HashMap<>();
@@ -47,7 +54,11 @@ public class MySerializationImpl implements MySerialization {
     serializerMap.put(0x03, new LongSerializer());
     serializerMap.put(0x04, new FloatSerializer());
     serializerMap.put(0x05, new DoubleSerializer());
-    serializerMap.put(0x06, new StringSerializer());
+    serializerMap.put(0x06, new CharSerializer());
+    serializerMap.put(0x07, new BooleanSerializer());
+    serializerMap.put(0x08, new StringSerializer());
+    serializerMap.put(0x09, new LocalDateTimeSerializer());
+    serializerMap.put(objectsArraySerializer, new ArraySerializer());
     serializerMap.put(mapNumberForSerialize, new MapSerializer());
     serializerMap.put(objectNumberForSerialize, new ObjectSerializerImpl());
     namesPool = new NamesPool();
@@ -84,13 +95,19 @@ public class MySerializationImpl implements MySerialization {
     for (Field field : obj.getClass().getDeclaredFields()) {
       field.setAccessible(true);
       try {
-        int type = typeMap.getOrDefault(field.get(obj).getClass(), objectNumberForSerialize);
-        out.writeInt(type);
-        out.writeInt(namesPool.getTypeForSerialize(field.get(obj).getClass().getName()));
-        if (type == objectNumberForSerialize) {
-          serialize(field.get(obj), out);
-        }else {
-          serializerMap.get(type).serialize(out, field.get(obj));
+        if (field.get(obj).getClass().isArray()) {
+          out.writeInt(objectsArraySerializer);
+          out.writeInt(namesPool.getTypeForSerialize(field.get(obj).getClass().getName()));
+          serializerMap.get(objectsArraySerializer).serialize(out, field.get(obj));
+        } else {
+          int type = typeMap.getOrDefault(field.get(obj).getClass(), objectNumberForSerialize);
+          out.writeInt(type);
+          out.writeInt(namesPool.getTypeForSerialize(field.get(obj).getClass().getName()));
+          if (type == objectNumberForSerialize) {
+            serialize(field.get(obj), out);
+          } else {
+            serializerMap.get(type).serialize(out, field.get(obj));
+          }
         }
       } catch (IllegalAccessException | IOException e) {
         e.printStackTrace();
