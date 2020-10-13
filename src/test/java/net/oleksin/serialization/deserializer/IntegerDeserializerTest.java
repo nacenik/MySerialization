@@ -20,7 +20,7 @@ class IntegerDeserializerTest {
   }
   
   @Test
-  void shouldDeserializeDouble() throws IOException {
+  void shouldDeserializeInteger() throws IOException {
     Integer integer = 1000;
     when(deserializingContext.readInt()).thenReturn(integer);
     int val = (int) deserializer.deserialize(deserializingContext, Integer.class);

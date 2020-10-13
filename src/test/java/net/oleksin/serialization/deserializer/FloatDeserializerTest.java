@@ -20,7 +20,7 @@ class FloatDeserializerTest {
   }
   
   @Test
-  void shouldDeserializeDouble() throws IOException {
+  void shouldDeserializeFloat() throws IOException {
     Float aFloat = 0.001f;
     when(deserializingContext.readFloat()).thenReturn(aFloat);
     float val = (float) deserializer.deserialize(deserializingContext, Float.class);

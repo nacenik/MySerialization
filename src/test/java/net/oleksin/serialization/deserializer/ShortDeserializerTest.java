@@ -20,7 +20,7 @@ class ShortDeserializerTest {
   }
   
   @Test
-  void shouldDeserializeDouble() throws IOException {
+  void shouldDeserializeShort() throws IOException {
     Short aShort = 55;
     when(deserializingContext.readShort()).thenReturn(aShort);
     short val = (short) deserializer.deserialize(deserializingContext, Short.class);

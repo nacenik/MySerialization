@@ -20,7 +20,7 @@ class LongDeserializerTest {
   }
   
   @Test
-  void shouldDeserializeDouble() throws IOException {
+  void shouldDeserializeLong() throws IOException {
     Long aLong = 555L;
     when(deserializingContext.readLong()).thenReturn(aLong);
     long val = (long) deserializer.deserialize(deserializingContext, Long.class);
