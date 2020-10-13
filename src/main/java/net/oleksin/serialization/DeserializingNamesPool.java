@@ -17,8 +17,4 @@ public class DeserializingNamesPool {
   public String put(Integer integer, String name) {
     return deserializeTypesMap.put(integer, name);
   }
-  
-  public Map<Integer, String> getDeserializeTypesMap() {
-    return deserializeTypesMap;
-  }
 }
