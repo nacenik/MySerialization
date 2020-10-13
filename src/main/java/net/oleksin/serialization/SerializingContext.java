@@ -5,8 +5,8 @@ import net.oleksin.serialization.serializer.ObjectSerializer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class SerializingContext {
   
@@ -82,13 +82,8 @@ public class SerializingContext {
     dataOutputStream.writeInt(filedName);
   }
   
-  public void writeNamesPool() throws IOException {
-    Map map = serializingNamesPool.getSerializeTypesMap();
-    dataOutputStream.writeInt(map.size());
-    Set keySet = map.keySet();
-    for (Object o : keySet) {
-      dataOutputStream.writeUTF(o.toString());
-      dataOutputStream.writeUTF(map.get(o).toString());
-    }
+  public void writeNamesPool() throws IOException, IllegalAccessException {
+    Map<?, ?> map = new HashMap<>(serializingNamesPool.getSerializeTypesMap());
+    writeObject(map);
   }
 }

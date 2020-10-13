@@ -8,7 +8,7 @@ import java.io.IOException;
 public class MapDeserializer implements Deserializer {
   
   @Override
-  public Object deserialize(DeserializingContext serializingContext, Object obj) throws IOException {
+  public Object deserialize(DeserializingContext serializingContext) throws IOException {
     return null;
   }
 }

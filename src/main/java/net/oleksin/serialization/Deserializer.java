@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface Deserializer {
   
-  Object deserialize(DeserializingContext serializingContext, Object obj) throws IOException;
+  Object deserialize(DeserializingContext serializingContext) throws IOException;
 }
