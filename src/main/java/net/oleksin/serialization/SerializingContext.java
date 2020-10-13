@@ -14,19 +14,19 @@ public class SerializingContext {
   private final CoreSerializerFactory coreSerializerFactory;
   private final Serializer arraySerializer;
   private final Serializer objectSerializer;
-  private final NamesPool namesPool;
+  private final SerializingNamesPool serializingNamesPool;
   
   public SerializingContext(DataOutputStream dataOutputStream) {
     this.dataOutputStream = dataOutputStream;
     coreSerializerFactory = new CoreSerializerFactory();
     arraySerializer = new ArraySerializer();
     objectSerializer = new ObjectSerializer();
-    namesPool = new NamesPool();
+    serializingNamesPool = new SerializingNamesPool();
   }
   
   public void writeObject(Object obj) throws IOException, IllegalAccessException {
     Class klass = obj.getClass();
-    dataOutputStream.writeInt(namesPool.getTypeForSerialize(klass.getName()));
+    dataOutputStream.writeInt(serializingNamesPool.getTypeForSerialize(klass.getName()));
     if (klass.isArray()) {
       arraySerializer.serialize(this, obj);
       return;
@@ -78,12 +78,12 @@ public class SerializingContext {
   }
   
   public void writeFiledName(String name) throws IOException {
-    int filedName = namesPool.getTypeForSerialize(name);
+    int filedName = serializingNamesPool.getTypeForSerialize(name);
     dataOutputStream.writeInt(filedName);
   }
   
   public void writeNamesPool() throws IOException {
-    Map map = namesPool.getSerializeTypesMap();
+    Map map = serializingNamesPool.getSerializeTypesMap();
     dataOutputStream.writeInt(map.size());
     Set keySet = map.keySet();
     for (Object o : keySet) {
