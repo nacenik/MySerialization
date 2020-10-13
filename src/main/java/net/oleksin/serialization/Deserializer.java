@@ -4,5 +4,5 @@ import java.io.IOException;
 
 public interface Deserializer {
   
-  Object deserialize(DeserializingContext serializingContext) throws IOException;
+  Object deserialize(DeserializingContext deserializingContext, Class<?> klass) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException;
 }

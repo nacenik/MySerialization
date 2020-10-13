@@ -1,7 +1,6 @@
 package net.oleksin.serialization;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 
 /**
  * First 7 bytes - NIKITOS
@@ -19,35 +18,51 @@ public class MySerializationImpl implements MySerialization {
   
   private final String header = "NIKITOS";
   private long offset = 0;
-  private SerializingContext serializingContext;
   
   @Override
   public void serializeObject(Object obj, String name) throws IOException {
     try (DataOutputStream oout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(name)))) {
-      serializingContext = new SerializingContext(oout);
+      SerializingContext serializingContext = new SerializingContext(oout);
       oout.write(header.getBytes());
       oout.writeLong(offset);
       serializingContext.writeObject(obj);
       offset = oout.size() - header.length();
-      writeNamesPool(name);
       serializingContext.writeNamesPool();
     } catch (IllegalAccessException e) {
       e.printStackTrace();
+    } finally {
+      writeOffset(name);
     }
   }
   
-  private void writeNamesPool(String name) throws IOException {
-    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-    buffer.putLong(offset);
+  private void writeOffset(String name) throws IOException {
     try (RandomAccessFile raf = new RandomAccessFile(name, "rw")) {
       raf.seek(header.length());
-      raf.write(buffer.array());
+      raf.writeLong(offset);
     }
   }
   
   @Override
   public Object deserializeObject(String name) throws IOException {
+    try (DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(name)))) {
+      DeserializingContext deserializingContext = new DeserializingContext(in);
+      byte[] headerBytes = new byte[header.length()];
+      in.read(headerBytes);
+      String fileHeader = new String(headerBytes);
+      long fileOffset = in.readLong();
+      if (fileHeader.equals(header)) {
+        RandomAccessFile raf = new RandomAccessFile(name, "rw");
+        raf.seek(fileOffset + header.length());
+        deserializingContext.setDeserializingNamesPool(raf);
+        return deserializingContext.readObject();
+      } else {
+        throw new NotSerializableException();
+      }
+    } catch (NotSerializableException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
+      e.printStackTrace();
+    }
     return null;
   }
 }
+
 

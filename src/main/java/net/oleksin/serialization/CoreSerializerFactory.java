@@ -2,6 +2,7 @@ package net.oleksin.serialization;
 
 import net.oleksin.serialization.serializer.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class CoreSerializerFactory {
@@ -19,6 +20,7 @@ public class CoreSerializerFactory {
     serializerMap.put(String.class, new StringSerializer());
     serializerMap.put(Boolean.class, new BooleanSerializer());
     serializerMap.put(List.class, new ListSerializer());
+    serializerMap.put(LocalDateTime.class, new LocalDateTimeSerializer());
     serializerMap.put(ArrayList.class, new ListSerializer());
     serializerMap.put(LinkedList.class, new ListSerializer());
     serializerMap.put(Map.class, new MapSerializer());

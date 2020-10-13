@@ -8,7 +8,7 @@ import java.io.IOException;
 public class DoubleDeserializer implements Deserializer {
   
   @Override
-  public Object deserialize(DeserializingContext serializingContext) throws IOException {
-    return null;
+  public Object deserialize(DeserializingContext deserializingContext, Class<?> klass) throws IOException {
+    return deserializingContext.readDouble();
   }
 }

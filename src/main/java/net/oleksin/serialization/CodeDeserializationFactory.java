@@ -2,6 +2,7 @@ package net.oleksin.serialization;
 
 import net.oleksin.serialization.deserializer.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class CodeDeserializationFactory {
@@ -18,6 +19,7 @@ public class CodeDeserializationFactory {
       deserializerMap.put(Character.class, new CharDeserializer());
       deserializerMap.put(String.class, new StringDeserializer());
       deserializerMap.put(Boolean.class, new BooleanDeserializer());
+      deserializerMap.put(LocalDateTime.class, new LocalDateTimeDeserializer());
       deserializerMap.put(List.class, new ListDeserializer());
       deserializerMap.put(ArrayList.class, new ListDeserializer());
       deserializerMap.put(LinkedList.class, new ListDeserializer());

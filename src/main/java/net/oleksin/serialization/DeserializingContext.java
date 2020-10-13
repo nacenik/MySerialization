@@ -5,6 +5,7 @@ import net.oleksin.serialization.deserializer.ObjectDeserializer;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class DeserializingContext {
   private final DataInputStream dataInputStream;
@@ -21,19 +22,19 @@ public class DeserializingContext {
     deserializingNamesPool = new DeserializingNamesPool();
   }
   
-  public Object ReadObject() throws IOException, ClassNotFoundException {
+  public Object readObject() throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
     int objType = dataInputStream.readInt();
     Class klass = Class.forName(deserializingNamesPool.getClassForDeserialize(objType));
     if (klass.isArray()) {
-      return arrayDeserializer.deserialize(this);
+      return arrayDeserializer.deserialize(this, klass);
     }
     
     Deserializer deserializer = codeDeserializationFactory.get(klass);
     if (deserializer != null) {
-      return deserializer.deserialize(this);
+      return deserializer.deserialize(this, klass);
     }
     
-    return objectDeserializer.deserialize(this);
+    return objectDeserializer.deserialize(this, klass);
   }
   
   public int readInt() throws IOException {
@@ -72,8 +73,18 @@ public class DeserializingContext {
     return dataInputStream.readUTF();
   }
   
-  public int readFiledName() throws IOException {
-    return dataInputStream.readInt();
+  public String readFiledName() throws IOException {
+    int i = dataInputStream.readInt();
+    return deserializingNamesPool.getClassForDeserialize(i);
+  }
+  
+  public void setDeserializingNamesPool(RandomAccessFile raf) throws IOException {
+    int size = raf.readInt();
+    for (int i = 0; i < size; i++) {
+      String str = raf.readUTF();
+      Integer integer = Integer.valueOf(raf.readUTF());
+      deserializingNamesPool.put(integer, str);
+    }
   }
   
 }
