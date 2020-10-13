@@ -2,9 +2,7 @@ package net.oleksin.serialization;
 
 import net.oleksin.serialization.serializer.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CoreSerializerFactory {
   private Map<Class<?>, Serializer> serializerMap;
@@ -18,8 +16,11 @@ public class CoreSerializerFactory {
     serializerMap.put(Float.class, new FloatSerializer());
     serializerMap.put(Double.class, new DoubleSerializer());
     serializerMap.put(Character.class, new CharSerializer());
+    serializerMap.put(String.class, new StringSerializer());
     serializerMap.put(Boolean.class, new BooleanSerializer());
     serializerMap.put(List.class, new ListSerializer());
+    serializerMap.put(ArrayList.class, new ListSerializer());
+    serializerMap.put(LinkedList.class, new ListSerializer());
     serializerMap.put(Map.class, new MapSerializer());
     serializerMap.put(HashMap.class, new MapSerializer());
     

@@ -91,5 +91,4 @@ public class SerializingContext {
       dataOutputStream.writeUTF(map.get(o).toString());
     }
   }
-  
 }

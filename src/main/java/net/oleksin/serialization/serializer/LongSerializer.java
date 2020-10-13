@@ -21,6 +21,6 @@ public class LongSerializer implements Serializer {
   
   @Override
   public void serialize(SerializingContext serializingContext, Object obj) throws IOException {
-    serializingContext.writeInt((Integer) obj);
+    serializingContext.writeLong((Long) obj);
   }
 }
