@@ -8,7 +8,7 @@ import java.io.IOException;
 public class ByteSerializer implements Serializer {
   
   @Override
-  public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
+  public void serialize(SerializingContext serializingContext, Object obj) throws IOException {
     serializingContext.writeByte((Byte) obj);
   }
 }

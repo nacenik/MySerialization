@@ -8,7 +8,7 @@ import java.io.IOException;
 public class CharSerializer implements Serializer {
   
   @Override
-  public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
+  public void serialize(SerializingContext serializingContext, Object obj) throws IOException {
     serializingContext.writeChar((Character) obj);
   }
 }
