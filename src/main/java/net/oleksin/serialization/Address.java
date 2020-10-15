@@ -1,9 +1,10 @@
 package net.oleksin.serialization;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
-public class Address {
+public class Address implements Serializable {
   
   private String city;
   

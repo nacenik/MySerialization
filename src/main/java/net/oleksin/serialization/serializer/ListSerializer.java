@@ -10,7 +10,7 @@ public class ListSerializer implements Serializer {
   
   @Override
   public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
-    List list = (List) obj;
+    List<?> list = (List<?>) obj;
     serializingContext.writeInt(list.size());
     for (Object o : list) {
       serializingContext.writeObject(o);

@@ -82,10 +82,10 @@ public class SerializingContext {
     dataOutputStream.writeInt(filedName);
   }
   
-  public void writeNamesPool() throws IOException, IllegalAccessException {
-    Map map = serializingNamesPool.getSerializeTypesMap();
+  public void writeNamesPool() throws IOException {
+    Map<?, ?> map = serializingNamesPool.getSerializeTypesMap();
     dataOutputStream.writeInt(map.size());
-    Set keySet = map.keySet();
+    Set<?> keySet = map.keySet();
     for (Object o : keySet) {
       dataOutputStream.writeUTF(o.toString());
       dataOutputStream.writeUTF(map.get(o).toString());

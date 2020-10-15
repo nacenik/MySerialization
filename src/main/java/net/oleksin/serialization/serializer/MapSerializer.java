@@ -11,9 +11,9 @@ public class MapSerializer implements Serializer {
   
   @Override
   public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
-    Map map = (Map) obj;
+    Map<?, ?> map = (Map<?, ?>) obj;
     serializingContext.writeInt(map.size());
-    Set keySet = map.keySet();
+    Set<?> keySet = map.keySet();
     for (Object key : keySet) {
       serializingContext.writeObject(key);
       serializingContext.writeObject(map.get(key));

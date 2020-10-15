@@ -1,10 +1,11 @@
 package net.oleksin.serialization;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
   
   private String name;
   

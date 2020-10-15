@@ -11,7 +11,7 @@ public class ListDeserializer implements Deserializer {
   @Override
   public Object deserialize(DeserializingContext deserializingContext, Class<?> klass) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
     int size = deserializingContext.readInt();
-    List list = (List) klass.newInstance();
+    List<Object> list = (List<Object>) klass.newInstance();
     for (int i = 0; i < size; i++) {
       list.add(deserializingContext.readObject());
     }

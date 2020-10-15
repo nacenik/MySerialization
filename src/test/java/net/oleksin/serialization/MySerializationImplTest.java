@@ -31,9 +31,9 @@ class MySerializationImplTest {
   }
   
   @Test
-  void serializeObject() throws IOException {
-    mySerialization.serializeObject(user, fileName);
-    List list = Collections.singletonList(mySerialization.deserializeObject(fileName));
+  void shouldSerializeAndDeserializeObject() throws IOException {
+    mySerialization.serializeObject(users, fileName);
+    List<?> list = (List<?>) mySerialization.deserializeObject(fileName);
     assertEquals(users, list);
     assertEquals(user, list.get(0));
   }
