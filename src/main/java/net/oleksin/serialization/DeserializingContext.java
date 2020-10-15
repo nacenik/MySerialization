@@ -9,14 +9,14 @@ import java.io.RandomAccessFile;
 
 public class DeserializingContext {
   private final DataInputStream dataInputStream;
-  private final CodeDeserializationFactory codeDeserializationFactory;
+  private final CoreDeserializationFactory coreDeserializationFactory;
   private final Deserializer arrayDeserializer;
   private final Deserializer objectDeserializer;
   private final DeserializingNamesPool deserializingNamesPool;
   
   public DeserializingContext(DataInputStream dataInputStream) {
     this.dataInputStream = dataInputStream;
-    codeDeserializationFactory = new CodeDeserializationFactory();
+    coreDeserializationFactory = new CoreDeserializationFactory();
     arrayDeserializer = new ArrayDeserializer();
     objectDeserializer = new ObjectDeserializer();
     deserializingNamesPool = new DeserializingNamesPool();
@@ -29,7 +29,7 @@ public class DeserializingContext {
       return arrayDeserializer.deserialize(this, klass);
     }
     
-    Deserializer deserializer = codeDeserializationFactory.get(klass);
+    Deserializer deserializer = coreDeserializationFactory.get(klass);
     if (deserializer != null) {
       return deserializer.deserialize(this, klass);
     }

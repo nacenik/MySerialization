@@ -1,6 +1,8 @@
 package net.oleksin.serialization;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * First 7 bytes - NIKITOS
@@ -15,44 +17,44 @@ import java.io.*;
  * Names table
  */
 public class MySerializationImpl implements MySerialization {
-  
-  private final String header = "NIKITOS";
-  private long offset = 0;
+  private final byte[] headerBytes = "NIKITOS".getBytes();
   
   @Override
   public void serializeObject(Object obj, String name) throws IOException {
-    try (DataOutputStream oout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(name)))) {
+    try (DataOutputStream oout = new DataOutputStream(new BufferedOutputStream(
+            Files.newOutputStream(Paths.get(name))))) {
+      long namesTableOffset = 0;
       SerializingContext serializingContext = new SerializingContext(oout);
-      oout.write(header.getBytes());
-      oout.writeLong(offset);
+      oout.write(headerBytes);
+      oout.writeLong(namesTableOffset);
       serializingContext.writeObject(obj);
-      offset = oout.size() - header.length();
+      namesTableOffset = oout.size() - headerBytes.length;
       serializingContext.writeNamesPool();
+      oout.flush();
+      writeOffset(name, namesTableOffset);
     } catch (IllegalAccessException e) {
       e.printStackTrace();
-    } finally {
-      writeOffset(name);
     }
   }
   
-  private void writeOffset(String name) throws IOException {
+  private void writeOffset(String name, long offset) throws IOException {
     try (RandomAccessFile raf = new RandomAccessFile(name, "rw")) {
-      raf.seek(header.length());
+      raf.seek(headerBytes.length);
       raf.writeLong(offset);
     }
   }
   
   @Override
   public Object deserializeObject(String name) throws IOException {
-    try (DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(name)))) {
+    try (DataInputStream in = new DataInputStream(new BufferedInputStream(
+            Files.newInputStream(Paths.get(name))))) {
       DeserializingContext deserializingContext = new DeserializingContext(in);
-      byte[] headerBytes = new byte[header.length()];
-      in.read(headerBytes);
-      String fileHeader = new String(headerBytes);
-      long fileOffset = in.readLong();
-      if (fileHeader.equals(header)) {
-        RandomAccessFile raf = new RandomAccessFile(name, "rw");
-        raf.seek(fileOffset + header.length());
+      byte[] fileHeaderBytes = new byte[headerBytes.length];
+      in.read(fileHeaderBytes);
+      long namesTableOffset = in.readLong();
+      if (headerTest(headerBytes, fileHeaderBytes)) {
+        RandomAccessFile raf = new RandomAccessFile(name, "r");
+        raf.seek(namesTableOffset + headerBytes.length);
         deserializingContext.setDeserializingNamesPool(raf);
         return deserializingContext.readObject();
       } else {
@@ -62,6 +64,15 @@ public class MySerializationImpl implements MySerialization {
       e.printStackTrace();
     }
     return null;
+  }
+  
+  private boolean headerTest(byte[] header, byte[]fileHeader) {
+    for (int i = 0; i < header.length; i++) {
+      if (header[i] != fileHeader[i]){
+        return false;
+      }
+    }
+    return true;
   }
 }
 

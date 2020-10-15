@@ -5,7 +5,6 @@ import net.oleksin.serialization.SerializingContext;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 
 public class MapSerializer implements Serializer {
   
@@ -13,10 +12,9 @@ public class MapSerializer implements Serializer {
   public void serialize(SerializingContext serializingContext, Object obj) throws IOException, IllegalAccessException {
     Map<?, ?> map = (Map<?, ?>) obj;
     serializingContext.writeInt(map.size());
-    Set<?> keySet = map.keySet();
-    for (Object key : keySet) {
-      serializingContext.writeObject(key);
-      serializingContext.writeObject(map.get(key));
+    for (Map.Entry<?, ?> entry : map.entrySet()) {
+      serializingContext.writeObject(entry.getKey());
+      serializingContext.writeObject(entry.getValue());
     }
     
   }

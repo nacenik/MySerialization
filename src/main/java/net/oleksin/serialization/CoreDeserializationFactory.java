@@ -5,10 +5,10 @@ import net.oleksin.serialization.deserializer.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class CodeDeserializationFactory {
+public class CoreDeserializationFactory {
     private Map<Class<?>, Deserializer> deserializerMap;
     
-    public CodeDeserializationFactory() {
+    public CoreDeserializationFactory() {
       deserializerMap = new HashMap<>();
       deserializerMap.put(Integer.class, new IntegerDeserializer());
       deserializerMap.put(Byte.class, new ByteDeserializer());
