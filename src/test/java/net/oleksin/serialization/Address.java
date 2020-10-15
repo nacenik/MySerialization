@@ -1,6 +1,7 @@
 package net.oleksin.serialization;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -14,14 +15,17 @@ public class Address implements Serializable {
   
   private Map<Long, Integer> zipCodes;
   
+  private Date date;
+  
   public Address() {
   }
   
-  public Address(String city, String street, Integer building, Map<Long, Integer> zipCodes) {
+  public Address(String city, String street, Integer building, Map<Long, Integer> zipCodes, Date date) {
     this.city = city;
     this.street = street;
     this.building = building;
     this.zipCodes = zipCodes;
+    this.date = date;
   }
   
   @Override
@@ -31,6 +35,7 @@ public class Address implements Serializable {
             ", street='" + street + '\'' +
             ", building=" + building +
             ", zipCodes=" + zipCodes +
+            ", date=" + date +
             '}';
   }
   

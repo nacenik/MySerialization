@@ -23,7 +23,7 @@ class MySerializationImplTest {
     addresses = new ArrayList();
     map = new HashMap<>();
     map.put(10L, 100);
-    addresses.add(new Address("Dnipro", "Slavy", 10, map));
+    addresses.add(new Address("Dnipro", "Slavy", 10, map, new Date()));
     user = new User("Terminator", LocalDateTime.now(), 5, addresses);
     users = new ArrayList();
     users.add(user);
