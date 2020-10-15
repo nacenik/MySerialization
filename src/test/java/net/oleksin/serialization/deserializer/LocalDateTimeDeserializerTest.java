@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class LocalDateTimeDeserializerTest {
@@ -22,11 +22,10 @@ class LocalDateTimeDeserializerTest {
   
   @Test
   void shouldDeserializeLocalDateTime() throws IOException {
-    LocalDateTime time = LocalDateTime.now();
-    when(deserializingContext.readUTF()).thenReturn(time.toString());
+    when(deserializingContext.readInt()).thenReturn(LocalDateTime.now().getMonthValue());
     LocalDateTime val = (LocalDateTime) deserializer.deserialize(deserializingContext, LocalDateTime.class);
     
-    assertEquals(time, val);
-    verify(deserializingContext).readUTF();
+    assertNotNull(val);
+    verify(deserializingContext, times(7)).readInt();
   }
 }

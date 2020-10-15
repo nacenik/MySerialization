@@ -25,6 +25,7 @@ public class CoreDeserializationFactory {
       deserializerMap.put(LinkedList.class, new ListDeserializer());
       deserializerMap.put(Map.class, new MapDeserializer());
       deserializerMap.put(HashMap.class, new MapDeserializer());
+      deserializerMap.put(Date.class, new DateDeserializer());
     }
     
     public Deserializer get(Class<?> klass) {

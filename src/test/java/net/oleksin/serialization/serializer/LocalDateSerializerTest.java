@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
-class LocalDateTimeSerializerTest {
+class LocalDateSerializerTest {
   private SerializingContext serializingContext;
   private LocalDateTimeSerializer localDateTimeSerializer;
   
@@ -27,7 +27,7 @@ class LocalDateTimeSerializerTest {
   void shouldLocalDateTimeSerialize() throws IOException {
     LocalDateTime localDateTime = LocalDateTime.now();
     localDateTimeSerializer.serialize(serializingContext, localDateTime);
-    verify(serializingContext).writeUTF(localDateTime.toString());
+    verify(serializingContext, times(7)).writeInt(anyInt());
   }
   
   @Test

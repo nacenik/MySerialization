@@ -10,6 +10,12 @@ public class LocalDateTimeDeserializer implements Deserializer {
   
   @Override
   public Object deserialize(DeserializingContext deserializingContext, Class<?> klass) throws IOException {
-    return LocalDateTime.parse(deserializingContext.readUTF());
+    return LocalDateTime.of(deserializingContext.readInt(),
+            deserializingContext.readInt(),
+            deserializingContext.readInt(),
+            deserializingContext.readInt(),
+            deserializingContext.readInt(),
+            deserializingContext.readInt(),
+            deserializingContext.readInt());
   }
 }

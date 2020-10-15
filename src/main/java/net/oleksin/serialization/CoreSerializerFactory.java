@@ -25,7 +25,7 @@ public class CoreSerializerFactory {
     serializerMap.put(LinkedList.class, new ListSerializer());
     serializerMap.put(Map.class, new MapSerializer());
     serializerMap.put(HashMap.class, new MapSerializer());
-    
+    serializerMap.put(Date.class, new DateSerializer());
   }
   
   public Serializer get(Class<?> klass) {
